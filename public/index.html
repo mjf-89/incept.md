@@ -12,31 +12,18 @@
         <nav aria-label="Main navigation"><a href="/blog/">Blog <span aria-hidden="true">↗</span></a></nav>
     </header>
     <main>
-        <section class="snippet" aria-label="Markdown snippet">
-            <div class="snippet-header">
-                <span>markdown</span>
-                <button id="copy" type="button" aria-live="polite" hidden>Copy</button>
+        <section class="terminal" aria-label="Terminal showing incept.md">
+            <div class="terminal-bar">
+                <span class="window-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                <span>incept.md</span>
+                <span aria-hidden="true">~/</span>
             </div>
-            <div class="snippet-body">
-                <pre><code id="markdown"># incept.md
+            <div class="terminal-body">
+                <div class="command"><span aria-hidden="true">$ </span>cat incept.md</div>
+                <pre><code># incept.md
 *This file should be edited by humans and humans only.*</code></pre>
             </div>
         </section>
     </main>
-    <script>
-        const copyButton = document.getElementById('copy');
-        let resetLabel;
-        copyButton.hidden = false;
-        copyButton.addEventListener('click', async () => {
-            clearTimeout(resetLabel);
-            try {
-                await navigator.clipboard.writeText(document.getElementById('markdown').textContent);
-                copyButton.textContent = 'Copied!';
-            } catch {
-                copyButton.textContent = 'Copy failed';
-            }
-            resetLabel = setTimeout(() => { copyButton.textContent = 'Copy'; }, 2500);
-        });
-    </script>
 </body>
 </html>
