@@ -13,7 +13,9 @@ A static site served directly by nginx. Edit files in `public/`; no build step.
 preserved at `/var/www/incept.md` as a fallback.
 
 The draft nginx config is installed in `sites-available` but is disabled until
-DNS, a certificate, and basic-auth credentials are configured.
+basic-auth credentials are configured. DNS is in place, and both nginx configs
+use the certificate at `/etc/letsencrypt/live/incept.md-wildcard/`, covering
+`incept.md` and `*.incept.md`. Renewal currently requires manual DNS validation.
 
 ## One-time publication
 
@@ -61,8 +63,8 @@ The initial production configuration is backed up at
 To enable the draft site later:
 
 1. Point `draft.incept.md` DNS to this server (`217.217.233.149` for IPv4).
-2. Obtain a certificate at `/etc/letsencrypt/live/draft.incept.md/` (or adjust
-   the template to the actual certificate path).
+2. Confirm the wildcard certificate at `/etc/letsencrypt/live/incept.md-wildcard/`
+   remains valid (already obtained during setup).
 3. Create `/etc/nginx/draft.incept.md.htpasswd` using `htpasswd` (provided by
    `apache2-utils`), with a username of your choice. Keep it outside the repo,
    owned by `root:www-data`, with permissions `640`.
