@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>incept.md</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header class="site-header">
+        <a class="wordmark" href="/" aria-current="page">incept.md</a>
+        <nav aria-label="Main navigation"><a href="/blog/">Blog <span aria-hidden="true">↗</span></a></nav>
+    </header>
+    <main>
+        <section class="snippet" aria-label="Markdown snippet">
+            <div class="snippet-header">
+                <span>markdown</span>
+                <button id="copy" type="button" aria-live="polite" hidden>Copy</button>
+            </div>
+            <div class="snippet-body">
+                <pre><code id="markdown"># incept.md
+*This file should be edited by humans and humans only.*</code></pre>
+            </div>
+        </section>
+    </main>
+    <script>
+        const copyButton = document.getElementById('copy');
+        let resetLabel;
+        copyButton.hidden = false;
+        copyButton.addEventListener('click', async () => {
+            clearTimeout(resetLabel);
+            try {
+                await navigator.clipboard.writeText(document.getElementById('markdown').textContent);
+                copyButton.textContent = 'Copied!';
+            } catch {
+                copyButton.textContent = 'Copy failed';
+            }
+            resetLabel = setTimeout(() => { copyButton.textContent = 'Copy'; }, 2500);
+        });
+    </script>
+</body>
+</html>
