@@ -1,0 +1,7 @@
+baseURL = 'https://incept.md/'
+languageCode = 'en'
+title = 'incept.md'
+disableKinds = ['taxonomy', 'term', 'RSS', 'sitemap']
+
+[markup.highlight]
+style = 'monokai'

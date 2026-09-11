@@ -1,77 +1,78 @@
 # incept.md
 
-A static site served directly by nginx. Edit files in `public/`; no build step.
+A minimal Hugo site with handwritten HTML templates and CSS. No theme,
+JavaScript, Node dependencies, or CSS framework. Tested with Hugo 0.123.7.
 
-## Server layout
+## Edit
 
-| Site | Checkout | Branch | nginx document root |
-| --- | --- | --- | --- |
-| incept.md | /srv/incept.md/main | main | /srv/incept.md/main/public |
-| draft.incept.md | /srv/incept.md/draft | draft | /srv/incept.md/draft/public |
+- `content/_index.md`: Markdown displayed literally in the homepage terminal.
+- `content/blog/`: blog posts written in Markdown.
+- `layouts/`: shared page shell, homepage, blog listing, and post templates.
+- `assets/css/style.css`: all styling.
+- `public/`: generated site served by nginx; ignored by Git. Do not edit here.
 
-`/root/incept.md` links to the main checkout. The previous standalone site is
-preserved at `/var/www/incept.md` as a fallback.
-
-The draft nginx config is installed in `sites-available` but is disabled until
-basic-auth credentials are configured. DNS is in place, and both nginx configs
-use the certificate at `/etc/letsencrypt/live/incept.md-wildcard/`, covering
-`incept.md` and `*.incept.md`. Renewal currently requires manual DNS validation.
-
-## One-time publication
-
-The site import is committed locally. No branches have been pushed by this
-setup. Review the commit, then publish the two branches with GitHub write access:
+Create a post:
 
 ```sh
-git -C /srv/incept.md/main push -u origin main
-git -C /srv/incept.md/draft push -u origin draft
+hugo new content blog/01-post-title.md
 ```
 
-## Deploy
+The post appears at `/blog/01-post-title/` and is listed automatically on `/blog/`.
+New posts start with `draft = true`. Set it to `false` when ready to publish.
+The authenticated preview includes draft posts; a normal `hugo` build excludes them.
 
-Commit and push changes from your working machine, then update the appropriate
-server checkout:
+## Preview locally
+
+Install Hugo (on Ubuntu: `sudo apt install hugo`), then run:
 
 ```sh
-git -C /srv/incept.md/main pull --ff-only
+hugo server --buildDrafts
+```
+
+## Deploy the draft server
+
+nginx serves `/srv/incept.md/draft/public` at `https://draft.incept.md/`,
+protected by HTTPS and basic auth. The password file lives outside this repo.
+
+After editing files on this server, rebuild:
+
+```sh
+cd /srv/incept.md/draft
+./scripts/build-draft.sh
+```
+
+This checkout has `git config core.hooksPath .githooks` set locally. Once the
+local `draft` branch is published with `git push -u origin draft`, deploying
+remote changes remains:
+
+```sh
 git -C /srv/incept.md/draft pull --ff-only
 ```
 
-Run just the command for the site you want to update. HTML/CSS changes are live
-immediately; nginx needs no reload. These checkouts use fast-forward-only pulls
-and should stay free of server-only edits. GitHub reads use the public HTTPS URL;
-no token is stored in either checkout.
+The server build script also requires `rsync` (installed on this server).
+It builds into a temporary directory first, then syncs the successful output
+to `public/`, removing stale generated pages and assets.
 
-To publish a preview, merge `draft` into `main` on GitHub or your working machine,
-then pull the main checkout.
+The post-merge hook builds Hugo when the pull brings in commits. A pull that is
+already up to date does not rebuild; use the build script for local edits or to
+retry a failed build. Build errors leave the currently served output intact.
+No nginx reload is needed for content or template changes.
 
-## Content
+For a fresh draft checkout, enable the hook once and run the build script:
 
-- Home: `public/index.html`
-- Styles: `public/style.css`
-- Blog listing: `public/blog/index.html` (add post links manually)
-- Post: `public/blog/xx-post-title.html`, served at `/blog/xx-post-title`
+```sh
+git config core.hooksPath .githooks
+./scripts/build-draft.sh
+```
 
-## nginx
+## Production
 
-Templates are in `deploy/nginx/`. nginx uses installed copies under
-`/etc/nginx/sites-available/`; pulling template edits does not apply them.
-Install configuration changes explicitly, run `nginx -t`, and reload nginx.
-The initial production configuration is backed up at
-`/srv/incept.md/nginx-before-repo.conf`.
+`/srv/incept.md/main` still serves the original static site. This conversion is
+local to the `draft` branch and has not been pushed. Before promoting Hugo to
+production, configure a production build using `hugo --cleanDestinationDir`
+(without `--buildDrafts` and using the `incept.md` base URL from `hugo.toml`).
+The draft hook is only enabled in the draft checkout.
 
-To enable the draft site later:
-
-1. Point `draft.incept.md` DNS to this server (`217.217.233.149` for IPv4).
-2. Confirm the wildcard certificate at `/etc/letsencrypt/live/incept.md-wildcard/`
-   remains valid (already obtained during setup).
-3. Create `/etc/nginx/draft.incept.md.htpasswd` using `htpasswd` (provided by
-   `apache2-utils`), with a username of your choice. Keep it outside the repo,
-   owned by `root:www-data`, with permissions `640`.
-4. Enable `/etc/nginx/sites-available/draft.incept.md` with a symlink in
-   `/etc/nginx/sites-enabled/`, run `nginx -t`, then reload nginx.
-
-The preview redirects HTTP to HTTPS and requires basic auth for all HTTPS
-content, including styles and posts. Do not enable its HTTPS config before the
-certificate and password file exist. TLS issuance and renewal are separate
-from this local filesystem setup.
+nginx configuration templates are in `deploy/nginx/`; pulling them does not
+replace the installed files in `/etc/nginx/sites-available/`. Both sites use the
+wildcard certificate at `/etc/letsencrypt/live/incept.md-wildcard/`.

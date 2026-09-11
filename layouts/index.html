@@ -1,0 +1,13 @@
+{{ define "main" }}
+<section class="terminal" aria-label="Terminal showing incept.md">
+    <div class="terminal-bar">
+        <span class="window-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span>incept.md</span>
+        <span aria-hidden="true">~/</span>
+    </div>
+    <div class="terminal-body">
+        <div class="command"><span aria-hidden="true">$ </span>cat incept.md</div>
+        <pre><code>{{ trim .RawContent " \r\n\t" }}</code></pre>
+    </div>
+</section>
+{{ end }}
