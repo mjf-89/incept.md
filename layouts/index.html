@@ -7,7 +7,7 @@
     </div>
     <div class="terminal-body">
         <div class="command"><span aria-hidden="true">$ </span>cat incept.md</div>
-        <pre><code>{{ trim .RawContent " \r\n\t" }}</code></pre>
+        <pre><code>{{ trim (site.GetPage "/incept").RawContent " \r\n\t" }}</code></pre>
     </div>
 </section>
 {{ end }}

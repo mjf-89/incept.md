@@ -5,7 +5,8 @@ JavaScript, Node dependencies, or CSS framework. Tested with Hugo 0.123.7.
 
 ## Edit
 
-- `content/_index.md`: Markdown displayed literally in the homepage terminal.
+- `content/incept.md`: Markdown displayed literally in the homepage terminal.
+  Its build settings keep it out of listings and prevent a separate `/incept/` page.
 - `content/blog/`: blog posts written in Markdown.
 - `layouts/`: shared page shell, homepage, blog listing, and post templates.
 - `assets/css/style.css`: all styling.
