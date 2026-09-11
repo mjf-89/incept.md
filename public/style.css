@@ -3,7 +3,7 @@
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
         "Liberation Mono", "Courier New", monospace;
     color: #292d29;
-    background: #f5f4ef;
+    background: #fff;
     font-size: 16px;
     line-height: 1.7;
 }
@@ -54,7 +54,9 @@ a:focus-visible { outline: 2px solid #496b40; outline-offset: 6px; }
 }
 
 .window-dots { display: flex; gap: 6px; }
-.window-dots i { width: 8px; height: 8px; border-radius: 50%; background: #788477; }
+.window-dots i { width: 12px; height: 12px; border-radius: 50%; background: #ff5f57; }
+.window-dots i:nth-child(2) { background: #febc2e; }
+.window-dots i:nth-child(3) { background: #28c840; }
 .terminal-body { padding: clamp(20px, 4vw, 32px); }
 .command { color: #a6c795; margin-bottom: 20px; }
 pre, code { font: inherit; }
