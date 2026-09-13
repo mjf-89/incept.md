@@ -89,3 +89,10 @@ checkout, since nginx serves its output immediately.
 nginx configuration templates are in `deploy/nginx/`; pulling them does not
 replace the installed files in `/etc/nginx/sites-available/`. Both sites use the
 wildcard certificate at `/etc/letsencrypt/live/incept.md-wildcard/`.
+
+## Crawlers
+
+Hugo generates `sitemap.xml` automatically. Production's `robots.txt` permits
+crawling and advertises `https://incept.md/sitemap.xml`. Other base URLs receive
+`Disallow: /`. The draft nginx config serves only `robots.txt` without basic auth
+so crawlers can read that rule; preview content and its sitemap remain protected.
