@@ -5,3 +5,8 @@ disableKinds = ['taxonomy', 'term', 'RSS', 'sitemap']
 
 [markup.highlight]
 style = 'monokai'
+
+[params.contact]
+email = 'marco.ferrarotti@gmail.com'
+linkedin = 'https://www.linkedin.com/in/mjf89'
+github = 'https://github.com/mjf-89'

@@ -1,15 +1,20 @@
 # incept.md
 
-A minimal Hugo site with handwritten HTML templates and CSS. No theme,
-JavaScript, Node dependencies, or CSS framework. Tested with Hugo 0.123.7.
+A minimal Hugo site with handwritten HTML templates, CSS, and a small clipboard
+script. No theme, Node dependencies, or CSS framework. Tested with Hugo 0.123.7.
 
 ## Edit
 
-- `content/incept.md`: Markdown displayed literally in the homepage terminal.
-  Its build settings keep it out of listings and prevent a separate `/incept/` page.
+- `INCEPT.md`: Markdown displayed literally in the homepage editor.
+  The homepage reads it directly; no Hugo front matter is needed.
+  `content/incept.md` is a relative symlink for convenience. Hugo ignores this
+  symlink, so it does not create a separate page or a blog listing entry.
 - `content/blog/`: blog posts written in Markdown.
 - `layouts/`: shared page shell, homepage, blog listing, and post templates.
 - `assets/css/style.css`: all styling.
+- `hugo.toml` → `[params.contact]`: email, LinkedIn, and GitHub footer links.
+- `assets/js/copy.js`: Copy button and Ctrl/Cmd+C while the editor is focused
+  (selected text keeps its normal copy behavior).
 - `public/`: generated site served by nginx; ignored by Git. Do not edit here.
 
 Create a post:

@@ -1,13 +1,27 @@
 {{ define "main" }}
-<section class="terminal" aria-label="Terminal showing incept.md">
+<section class="terminal" id="file-editor" tabindex="0" aria-label="Read-only editor: ~/repos/incept.md/INCEPT.md" aria-keyshortcuts="Control+C Meta+C">
     <div class="terminal-bar">
         <span class="window-dots" aria-hidden="true"><i></i><i></i><i></i></span>
-        <span>incept.md</span>
-        <span aria-hidden="true">~/</span>
+        <span class="editor-filename">~/repos/incept.md/INCEPT.md</span>
+        <button class="copy-button" id="copy-file" type="button" title="Copy file contents" aria-label="Copy file contents" hidden>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                <path d="M8 16H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v3" opacity="0.65"></path>
+                <rect x="8" y="8" width="13" height="13" rx="2.5"></rect>
+            </svg>
+        </button>
     </div>
-    <div class="terminal-body">
-        <div class="command"><span aria-hidden="true">$ </span>cat incept.md</div>
-        <pre><code>{{ trim (site.GetPage "/incept").RawContent " \r\n\t" }}</code></pre>
+    <div class="terminal-body" tabindex="0" role="region" aria-label="INCEPT.md content">
+        {{- $markdown := trim (readFile "INCEPT.md") " \r\n\t" -}}
+        {{/* Seed a line boundary for Chroma's first-line emphasis rule, then remove the empty seed line. */}}
+        {{- $highlighted := highlight (printf "\n%s" $markdown) "markdown" "noClasses=false,linenos=false" -}}
+        {{- $highlighted = replace $highlighted "<span class=\"line\"><span class=\"cl\">\n</span></span>" "" 1 -}}
+        <div id="file-content">{{ $highlighted | safeHTML }}</div>
+    </div>
+    <div class="editor-status">
+        <span>Markdown · read only</span>
+        <span id="copy-status" role="status"></span>
     </div>
 </section>
+{{ $copy := resources.Get "js/copy.js" | fingerprint }}
+<script src="{{ $copy.RelPermalink }}" defer></script>
 {{ end }}
