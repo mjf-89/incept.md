@@ -35,24 +35,31 @@ Install Hugo (on Ubuntu: `sudo apt install hugo`), then run:
 hugo server --buildDrafts
 ```
 
-## Deploy the draft server
+## Server deployments
 
-nginx serves `/srv/incept.md/draft/public` at `https://draft.incept.md/`,
-protected by HTTPS and basic auth. The password file lives outside this repo.
+| Branch | Checkout | Site |
+| --- | --- | --- |
+| `main` | `/srv/incept.md/main` | `https://incept.md/` |
+| `draft` | `/srv/incept.md/draft` | `https://draft.incept.md/` (basic auth) |
+
+nginx serves each checkout's `public/` folder. The preview password file lives
+outside this repo. Production excludes posts marked `draft = true`; preview
+includes them.
 
 After editing files on this server, rebuild:
 
 ```sh
 cd /srv/incept.md/draft
-./scripts/build-draft.sh
+./scripts/build.sh
 ```
 
-This checkout has `git config core.hooksPath .githooks` set locally. Once the
-local `draft` branch is published with `git push -u origin draft`, deploying
-remote changes remains:
+Both server checkouts have `git config core.hooksPath .githooks` set locally.
+The build script selects the correct URL and draft visibility from the checked-out
+branch. Deploy remote changes with the command for the site you want to update:
 
 ```sh
 git -C /srv/incept.md/draft pull --ff-only
+git -C /srv/incept.md/main pull --ff-only
 ```
 
 The server build script also requires `rsync` (installed on this server).
@@ -64,20 +71,20 @@ already up to date does not rebuild; use the build script for local edits or to
 retry a failed build. Build errors leave the currently served output intact.
 No nginx reload is needed for content or template changes.
 
-For a fresh draft checkout, enable the hook once and run the build script:
+For a fresh server checkout, enable the hook once and run the build script:
 
 ```sh
 git config core.hooksPath .githooks
-./scripts/build-draft.sh
+./scripts/build.sh
 ```
 
 ## Production
 
-`/srv/incept.md/main` still serves the original static site. This conversion is
-local to the `draft` branch and has not been pushed. Before promoting Hugo to
-production, configure a production build using `hugo --cleanDestinationDir`
-(without `--buildDrafts` and using the `incept.md` base URL from `hugo.toml`).
-The draft hook is only enabled in the draft checkout.
+Merge reviewed changes from `draft` into `main`, push them, and pull the main
+checkout. Set a post's `draft` field to `false` when it is ready to go public.
+Use `./scripts/build.sh main` to build explicitly for production, or
+`./scripts/build-draft.sh` for preview. Never use a preview build in the main
+checkout, since nginx serves its output immediately.
 
 nginx configuration templates are in `deploy/nginx/`; pulling them does not
 replace the installed files in `/etc/nginx/sites-available/`. Both sites use the
