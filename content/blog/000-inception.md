@@ -47,7 +47,7 @@ I then move on to creating an empty design folder and I spin up whatever harness
 
 What I really like about this workflow is the breadcrumb trail that it leaves behind. From the original seed of the idea, to the actual design of the internals with reasons behind each decision, to the actual implementation. I wish all the OSS projects had this kind of deep internal insight. I would read those kinds of documents and honestly they would make a hell of a training data set for LLMs.
 
-# They say AGI is here
+## They say AGI is here
 
 I started to use this workflow a few months back, and it is probably not too dissimilar from what other developers have adopted. Today lots of people would already question such an approach, saying that I spend way too much time being in the loop or I get involved in too many architectural decisions and that probably the model would already know better.
 
@@ -57,6 +57,6 @@ I have to experiment more for sure, trying to ask for more complex and ambitious
 
 Right now, I think that probably the most sensible thing to do is simply try to build things and see if those things stick around. I would say that software is pretty unforgiving: if under the hood things are messy and not thought out, the resulting user experience will be bad and users will find a better competing alternative if there is one. I perfectly agree with Jonathan Blow about [the quality of software right now](https://youtu.be/FeAMiBKi_EM). We daily deal with crappy software, so if the AGI promise of producing amazing software out of a single prompt is grounded, we should very rapidly see that legacy crappy software being replaced by new software not pushed by large corporations but by single individuals who are not even developers but are simply users frustrated enough by the current state of things.
 
-# Commit
+## Commit
 
 I have issues committing to things outside my family and my work, so most of my side projects actually die out very fast. I will try to commit to writing at least one post per month until 2027. Then I'll try to ride the wave of New Year's hopes into committing myself for the whole of 2027. Those should be a grand total of 5 posts. Come on, Marco, you can do it.
